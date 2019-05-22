@@ -5,7 +5,7 @@ import pl.michalskiba.KsiazkiREST.Model.Book;
 
 import java.util.List;
 
-public interface BookRepository extends JpaRepository<Book, Integer> {
+public interface BookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findAll();
 
