@@ -35,24 +35,12 @@ public class BookController {
         return bookRepository.findBookById(id);
     }
 
+    @GetMapping(value = "/AutorBooks/{autor}")
+    public List<Book> listByAutor(@PathVariable String autor) {
+        return bookRepository.findBooksByAutorContains(autor);
+    }
 
 
-
-//    @GET
-//    @Path("/all")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public String getBook() throws JsonProcessingException {
-//        ObjectMapper mapper = new ObjectMapper();
-//        mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-//        return mapper.writeValueAsString(BookDAO.allbook());
-//    }
-//
-//    @GET
-//    @Path("/all/hibernate")
-//    @Produces(MediaType.APPLICATION_JSON)
-//    public List<Book> getAllBook(){
-//        return BookDAO.getAllbook();
-//    }
 //
 //    @POST
 //    @Path("/add")
