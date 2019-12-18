@@ -1,6 +1,7 @@
 package pl.michalskiba.KsiazkiREST.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import pl.michalskiba.KsiazkiREST.Model.Book;
 import pl.michalskiba.KsiazkiREST.Repository.BookRepository;
@@ -10,7 +11,7 @@ import java.util.List;
 
 @RestController
 @CrossOrigin
-@RequestMapping("/api")
+@RequestMapping("/apib/")
 public class BookController {
 
     @Autowired
@@ -26,6 +27,7 @@ public class BookController {
     }
 
     @GetMapping(value = "/books")
+//    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<Book> list() {
         return bookRepository.findAll();
     }
