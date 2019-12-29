@@ -14,4 +14,9 @@ public class KsiazkiRestApplication {
 		SpringApplication.run(KsiazkiRestApplication.class, args);
 	}
 
+//	@Bean
+//	public View spittles() {
+//		return new MappingJackson2JsonView();
+//	}
+
 }
