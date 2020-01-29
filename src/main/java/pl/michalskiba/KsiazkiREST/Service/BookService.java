@@ -22,7 +22,7 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public Optional<Book> findById(Integer id) {
+    public Optional<Book> findById(Long id) {
         return bookRepository.findById(id);
     }
 
@@ -30,7 +30,7 @@ public class BookService {
         return bookRepository.save(stock);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         bookRepository.deleteById(id);
     }
 }

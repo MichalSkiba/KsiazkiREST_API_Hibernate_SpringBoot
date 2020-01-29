@@ -5,26 +5,32 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.1.5.RELEASE</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<version>2.1.11.RELEASE</version>
+		<relativePath/>
 	</parent>
 	<groupId>pl.michalskiba</groupId>
 	<artifactId>KsiazkiREST</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>KsiazkiREST</name>
 	<description>Projekt Spring Rest Angular</description>
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		<docker.image.prefix>spring-boot-book</docker.image.prefix>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -34,18 +40,10 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-jdbc</artifactId>
 		</dependency>
-
-		<!--		<dependency>-->
-		<!--			<groupId>mysql</groupId>-->
-		<!--			<artifactId>mysql-connector-java</artifactId>-->
-		<!--			<scope>runtime</scope>-->
-		<!--		</dependency>-->
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
 			<artifactId>mssql-jdbc</artifactId>
-			<version>6.1.0.jre8</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -65,16 +63,13 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-hateoas</artifactId>
 		</dependency>
-		<!-- Jackson JSON Processor -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.9.9.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.fasterxml.jackson.dataformat</groupId>
 			<artifactId>jackson-dataformat-xml</artifactId>
-			<version>2.9.9</version>
 		</dependency>
 		<dependency>
 			<groupId>io.springfox</groupId>
@@ -86,10 +81,15 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>2.9.2</version>
 		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.1</version>
+		</dependency>
 		<!--		<dependency>-->
 		<!--			<groupId>io.jsonwebtoken</groupId>-->
 		<!--			<artifactId>jjwt</artifactId>-->
-		<!--			<version>0.9.0</version>-->
+		<!--			<version>0.9.1</version>-->
 		<!--		</dependency>-->
 		<!--		<dependency>-->
 		<!--			<groupId>org.springframework.boot</groupId>-->
@@ -99,7 +99,6 @@
 		<!--			<groupId>org.springframework.security</groupId>-->
 		<!--			<artifactId>spring-security-config</artifactId>-->
 		<!--		</dependency>-->
-
 		<dependency>
 			<groupId>org.xmlunit</groupId>
 			<artifactId>xmlunit-core</artifactId>
@@ -111,8 +110,7 @@
 			<plugin>
 				<groupId>com.spotify</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
-				<version>1.0.0</version>
-
+				<version>1.2.1</version>
 				<configuration>
 					<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
 					<dockerDirectory>src/main/docker</dockerDirectory>
@@ -124,13 +122,10 @@
 					</resources>
 				</configuration>
 			</plugin>
-
-
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
