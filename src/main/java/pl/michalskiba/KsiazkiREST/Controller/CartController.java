@@ -5,7 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import pl.michalskiba.KsiazkiREST.Model.Book;
 import pl.michalskiba.KsiazkiREST.Model.Cart;
+import pl.michalskiba.KsiazkiREST.Model.Status;
 import pl.michalskiba.KsiazkiREST.Repository.CartRepository;
 import pl.michalskiba.KsiazkiREST.Service.BookService;
 import pl.michalskiba.KsiazkiREST.Service.CartService;
@@ -15,6 +17,7 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -47,6 +50,11 @@ public class CartController {
         return ResponseEntity.ok(cartService.findCart());
     }
 
+    @GetMapping("/{id}")
+    public  ResponseEntity<Cart> findById(@PathVariable Long id){
+        return ResponseEntity.ok(cartService.cartById(id));
+    }
+
     @PostMapping("/add")
 //    @PreAuthorize("hasRole('MODERATOR')")
     public ResponseEntity<Cart> create(@Valid @RequestBody Cart cart) 	throws URISyntaxException {
@@ -59,26 +67,30 @@ public class CartController {
                     .path("/{id}")
                     .buildAndExpand(createdCart.getId())
                     .toUri();
-
             return ResponseEntity.created(uri)
                     .body(createdCart);
         }
     }
 
-    @GetMapping("/shoppingCart")
-    public ModelAndView shoppingCart() {
-        ModelAndView modelAndView = new ModelAndView("/shoppingCart");
-        modelAndView.addObject("products", cartService.getProductsInCart());
-        modelAndView.addObject("total", cartService.getTotal().toString());
-        return modelAndView;
-    }
-
-//    @PutMapping("/shoppingCart/addProduct/{productId}")
-//    public ResponseEntity <Cart> addProductToCart(@PathVariable("productId") Long productId) {
-//        bookService.findById(productId).ifPresent(cartService::addBook);
-//        Optional<Book> book = Optional.of(bookService.findById(productId).get());
-//        return ResponseEntity.ok(cartService.addBook(book));
+//    @GetMapping("/shoppingCart")
+//    public ModelAndView shoppingCart() {
+//        ModelAndView modelAndView = new ModelAndView("/shoppingCart");
+//        modelAndView.addObject("products", cartService.getProductsInCart());
+//        modelAndView.addObject("total", cartService.getTotal().toString());
+//        return modelAndView;
 //    }
+
+    @PutMapping("/shoppingCart/addProduct/{Id}")
+    public ResponseEntity<Cart> addProductToCart(@PathVariable("Id") Long id) {
+        List<Cart> cart = (cartRepository.findCartByStatus(Status.NOWE));
+        Long crid = null;
+        for (Cart cr: cart) {
+            crid = cr.getId();
+            break;
+        }
+        Book books = (bookService.findById(id).get());
+        return ResponseEntity.ok(cartService.addBook(books, crid));
+    }
 
 //    @GetMapping("/shoppingCart/removeProduct/{productId}")
 //    public ModelAndView removeProductFromCart(@PathVariable("productId") Long productId) {

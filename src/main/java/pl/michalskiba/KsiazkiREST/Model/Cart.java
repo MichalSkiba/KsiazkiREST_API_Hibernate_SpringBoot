@@ -35,7 +35,7 @@ public class Cart  {
     @CollectionTable(name = "ITEMS")
     @OrderColumn
     @Column(name = "Book")
-    private List<Book> linesItems = new ArrayList<Book>();
+    private List<Book> linesItems = new ArrayList<>();
     private Status status;
 
 

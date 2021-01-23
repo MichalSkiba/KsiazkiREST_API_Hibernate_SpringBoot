@@ -38,6 +38,10 @@ public class CartService {
         return cartRepository.findAll();
     }
 
+    public  Cart cartById(Long id){
+        return cartRepository.findCartById(id);
+    }
+
 
 //    public void checkout() throws NotEnoughbooksInStockException {
 //        Book book;
@@ -61,22 +65,24 @@ public class CartService {
     }
 
 
-//    public addBook(Long id) {
-//        Optional<Book> book = bookRepository.findById(id);
-//        Cart cart = new Cart();
-//        if (!findCart()){
-//            cart.getLinesItems().add(book);
-//        } else {
-//            for (Cart carts: findAll()) {
-//                if(carts.getStatus() == Status.NOWE){
-//                    carts.getLinesItems().add(book);
-//                }else if (carts.getStatus() == Status.ZAPISANE){
-//                    carts.getLinesItems().add(book);
-//                }
-//            }
-//        }
-//    }
-
+    public Cart addBook(Book book, Long id) {
+        Cart cart = cartById(id);
+        if (cart.getId() == id) {
+            cart.getLinesItems().add(book);
+            save(cart);
+        } else {
+            for (Cart carts: findAll()) {
+                if(carts.getStatus() == Status.NOWE){
+                    carts.getLinesItems().add(book);
+                    save(cart);
+                }else if (carts.getStatus() == Status.ZAPISANE){
+                    carts.getLinesItems().add(book);
+                    save(cart);
+                }
+            }
+        }
+        return cart;
+    }
 
     public void removebook(Book book) {
         if (books.containsKey(book)) {
@@ -93,12 +99,13 @@ public class CartService {
     }
 
     public Cart save(Cart stock) {
-
         stock.getId();
         stock.setIdCart(UUID.randomUUID());
-        stock.setStatus(Status.NOWE);
+        if(stock.getLinesItems() == null){
+            stock.setStatus(Status.NOWE);
+        } else {
+            stock.setStatus(Status.ZAPISANE);
+        }
         return cartRepository.save(stock);
     }
-
-
 }
