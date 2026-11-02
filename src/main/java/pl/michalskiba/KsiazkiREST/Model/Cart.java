@@ -6,8 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.stereotype.Indexed;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@XmlRootElement
 @Indexed
 public class Cart  {
 
@@ -31,10 +29,8 @@ public class Cart  {
     private UUID idCart;
 //    private User user;
     private BigDecimal subtotal;
-    @ElementCollection
-    @CollectionTable(name = "ITEMS")
-    @OrderColumn
-    @Column(name = "Book")
+    @ManyToMany
+    @JoinTable(name = "cart_books", joinColumns = @JoinColumn(name = "cart_id"), inverseJoinColumns = @JoinColumn(name = "book_id"))
     private List<Book> linesItems = new ArrayList<>();
     private Status status;
 

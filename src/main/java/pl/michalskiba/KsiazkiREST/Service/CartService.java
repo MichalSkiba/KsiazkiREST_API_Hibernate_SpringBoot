@@ -31,7 +31,7 @@ public class CartService {
     }
 
     public Boolean findCart() {
-        return cartRepository.existsCartBy();
+        return cartRepository.count() > 0;
     }
 
     public List<Cart> findAll(){

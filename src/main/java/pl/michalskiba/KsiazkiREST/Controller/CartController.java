@@ -12,7 +12,7 @@ import pl.michalskiba.KsiazkiREST.Repository.CartRepository;
 import pl.michalskiba.KsiazkiREST.Service.BookService;
 import pl.michalskiba.KsiazkiREST.Service.CartService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/cart1")
 public class CartController {
 

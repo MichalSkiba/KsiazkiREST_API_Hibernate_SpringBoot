@@ -5,14 +5,12 @@ import org.springframework.stereotype.Indexed;
 
 import java.util.HashSet;
 import java.util.Set;
-import javax.persistence.*;
-import javax.validation.constraints.*;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@XmlRootElement
 @Indexed
 @Entity
 @Table(	name = "users",

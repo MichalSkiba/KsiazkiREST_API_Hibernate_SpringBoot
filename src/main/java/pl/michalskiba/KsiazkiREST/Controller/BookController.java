@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api")
 public class BookController {
 
@@ -29,7 +28,7 @@ public class BookController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Book> findById(@PathVariable Long id) {
-        return ResponseEntity.ok(bookService.findById(id).get());
+        return bookService.findById(id).map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")

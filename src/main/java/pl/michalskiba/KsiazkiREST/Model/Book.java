@@ -3,8 +3,7 @@ package pl.michalskiba.KsiazkiREST.Model;
 import lombok.*;
 import org.springframework.stereotype.Indexed;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Getter
@@ -12,7 +11,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@XmlRootElement
 @Indexed
 public class Book {
 
