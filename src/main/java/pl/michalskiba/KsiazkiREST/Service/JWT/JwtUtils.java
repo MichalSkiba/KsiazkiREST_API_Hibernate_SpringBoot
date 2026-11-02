@@ -1,57 +1,54 @@
 package pl.michalskiba.KsiazkiREST.Service.JWT;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
+import javax.crypto.SecretKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import pl.michalskiba.KsiazkiREST.Service.UserDetailsImpl;
-
 import java.util.Date;
 
 @Component
 public class JwtUtils {
-	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+    private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+    private final SecretKey secretKey;
+    private final long expirationMs;
 
-	@Value("${michalskiba.app.jwtSecret}")
-	private String jwtSecret;
+    public JwtUtils(
+            @Value("${michalskiba.app.jwtSecret}") String base64Secret,
+            @Value("${michalskiba.app.jwtExpirationMs}") long expirationMs) {
+        secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(base64Secret));
+        this.expirationMs = expirationMs;
+    }
 
-	@Value("${michalskiba.app.jwtExpirationMs}")
-	private int jwtExpirationMs;
+    public String generateJwtToken(Authentication authentication) {
+        UserDetailsImpl principal = (UserDetailsImpl) authentication.getPrincipal();
+        long now = System.currentTimeMillis();
+        return Jwts.builder()
+                .subject(principal.getUsername())
+                .issuedAt(new Date(now))
+                .expiration(new Date(now + expirationMs))
+                .signWith(secretKey, Jwts.SIG.HS512)
+                .compact();
+    }
 
-	public String generateJwtToken(Authentication authentication) {
+    public String getUserNameFromJwtToken(String token) {
+        return Jwts.parser().verifyWith(secretKey).build()
+                .parseSignedClaims(token).getPayload().getSubject();
+    }
 
-		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-
-		return Jwts.builder()
-				.setSubject((userPrincipal.getUsername()))
-				.setIssuedAt(new Date())
-				.setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
-				.signWith(SignatureAlgorithm.HS512, jwtSecret)
-				.compact();
-	}
-
-	public String getUserNameFromJwtToken(String token) {
-		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
-	}
-
-	public boolean validateJwtToken(String authToken) {
-		try {
-			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
-			return true;
-		} catch (SignatureException e) {
-			logger.error("Invalid JWT signature: {}", e.getMessage());
-		} catch (MalformedJwtException e) {
-			logger.error("Invalid JWT token: {}", e.getMessage());
-		} catch (ExpiredJwtException e) {
-			logger.error("JWT token is expired: {}", e.getMessage());
-		} catch (UnsupportedJwtException e) {
-			logger.error("JWT token is unsupported: {}", e.getMessage());
-		} catch (IllegalArgumentException e) {
-			logger.error("JWT claims string is empty: {}", e.getMessage());
-		}
-
-		return false;
-	}
+    public boolean validateJwtToken(String token) {
+        try {
+            Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token);
+            return true;
+        } catch (JwtException | IllegalArgumentException exception) {
+            logger.warn("Invalid JWT: {}", exception.getClass().getSimpleName());
+            return false;
+        }
+    }
 }
