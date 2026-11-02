@@ -1,10 +1,11 @@
-FROM maven:3.6.3-jdk-8 AS MAVEN_BUILD
-COPY pom.xml /build/
-COPY src /build/src/
-WORKDIR /build/
-RUN mvn package
+FROM maven:3.9.11-eclipse-temurin-21 AS build
+WORKDIR /build
+COPY pom.xml ./
+COPY src ./src
+RUN mvn -B --no-transfer-progress -DskipTests package
 
-FROM openjdk:8-jdk-alpine
+FROM eclipse-temurin:21-jre
 WORKDIR /app
-COPY --from=MAVEN_BUILD /build/target/KsiazkiREST-0.0.1-SNAPSHOT.jar /app/
-ENTRYPOINT ["java", "-jar", "KsiazkiREST-0.0.1-SNAPSHOT.jar"]
+COPY --from=build /build/target/KsiazkiREST-0.0.1-SNAPSHOT.jar /app/app.jar
+USER 10001
+ENTRYPOINT ["java","-jar","/app/app.jar"]
