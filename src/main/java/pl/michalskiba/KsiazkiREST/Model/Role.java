@@ -2,7 +2,7 @@ package pl.michalskiba.KsiazkiREST.Model;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 @Getter
 @Setter
 @AllArgsConstructor

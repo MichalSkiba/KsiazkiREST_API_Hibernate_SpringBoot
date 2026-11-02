@@ -2,7 +2,7 @@ package pl.michalskiba.KsiazkiREST.Config.request;
 
 import lombok.*;
 import java.util.Set;
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 
 @Getter
 @Setter

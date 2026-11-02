@@ -20,13 +20,12 @@ import pl.michalskiba.KsiazkiREST.Repository.UserRepository;
 import pl.michalskiba.KsiazkiREST.Service.JWT.JwtUtils;
 import pl.michalskiba.KsiazkiREST.Service.UserDetailsImpl;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@CrossOrigin
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -85,35 +84,10 @@ public class AuthController {
                 signUpRequest.getEmail(),
                 encoder.encode(signUpRequest.getPassword()));
 
-        Set<String> strRoles = signUpRequest.getRole();
+        // Public registration must never grant roles supplied by an untrusted client.
         Set<Role> roles = new HashSet<>();
-
-        if (strRoles == null) {
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
-                switch (role) {
-                    case "admin":
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(adminRole);
-
-                        break;
-                    case "mod":
-                        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(modRole);
-
-                        break;
-                    default:
-                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(userRole);
-                }
-            });
-        }
+        roles.add(roleRepository.findByName(ERole.ROLE_USER)
+                .orElseThrow(() -> new IllegalStateException("ROLE_USER is not seeded")));
 
         user.setRoles(roles);
         userRepository.save(user);
